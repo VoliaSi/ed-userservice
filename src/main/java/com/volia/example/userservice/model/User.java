@@ -1,5 +1,6 @@
 package com.volia.example.userservice.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorColumn;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -22,6 +23,8 @@ public abstract class User {
     private Long id;
 
     private String name;
+
+    @Column(unique = true)
     private String email;
     private String password; // шыфраваць
 }
