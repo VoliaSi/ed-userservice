@@ -4,12 +4,16 @@ import com.volia.example.userservice.dto.teacher.CreateTeacherRequest;
 import com.volia.example.userservice.dto.teacher.TeacherResponse;
 import com.volia.example.userservice.dto.teacher.UpdateTeacherRequest;
 import com.volia.example.userservice.model.Teacher;
-import org.mapstruct.*;
+import org.mapstruct.BeanMapping;
+import org.mapstruct.Mapper;
+import org.mapstruct.MappingTarget;
+import org.mapstruct.NullValuePropertyMappingStrategy;
 
 import java.util.List;
 
 @Mapper(componentModel = "spring")
-public interface TeacherMapper {
+public interface TeacherMapper
+{
 
     TeacherResponse toResponse(Teacher teacher);
 
