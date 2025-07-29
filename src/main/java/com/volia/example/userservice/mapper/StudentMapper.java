@@ -1,27 +1,26 @@
 package com.volia.example.userservice.mapper;
 
-import com.volia.example.userservice.dto.StudentDTO;
+import com.volia.example.userservice.dto.student.CreateStudentRequest;
+import com.volia.example.userservice.dto.student.StudentResponse;
+import com.volia.example.userservice.dto.student.UpdateStudentRequest;
 import com.volia.example.userservice.model.Student;
+import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
-import org.mapstruct.Builder;
+import org.mapstruct.NullValuePropertyMappingStrategy;
 
 import java.util.List;
 
-@Mapper(
-        componentModel = "spring",
-        builder = @Builder(disableBuilder = false)
-)
+@Mapper(componentModel = "spring")
+public interface StudentMapper
+{
 
-public interface StudentMapper {
+    StudentResponse toResponse(Student student);
 
-    StudentDTO toDTO(Student student);
+    List<StudentResponse> toResponseList(List<Student> students);
 
-    Student toEntity(StudentDTO dto);
+    Student fromCreateRequest(CreateStudentRequest dto);
 
-    List<StudentDTO> toDTOList(List<Student> students);
-
-    List<Student> toEntityList(List<StudentDTO> dtos);
-
-    void updateStudentFromDTO(StudentDTO dto, @MappingTarget Student student);
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    void updateStudentFromRequest(UpdateStudentRequest dto, @MappingTarget Student student);
 }
