@@ -1,26 +1,19 @@
 package com.volia.example.userservice.mapper;
 
-import com.volia.example.userservice.dto.teacher.CreateTeacherRequest;
-import com.volia.example.userservice.dto.teacher.TeacherResponse;
-import com.volia.example.userservice.dto.teacher.UpdateTeacherRequest;
+import com.volia.example.userservice.dto.TeacherDto;
 import com.volia.example.userservice.model.Teacher;
-import org.mapstruct.BeanMapping;
-import org.mapstruct.Mapper;
-import org.mapstruct.MappingTarget;
-import org.mapstruct.NullValuePropertyMappingStrategy;
-
-import java.util.List;
+import org.mapstruct.*;
 
 @Mapper(componentModel = "spring")
-public interface TeacherMapper
-{
+public interface TeacherMapper extends UserMapper<TeacherDto, Teacher> {
 
-    TeacherResponse toResponse(Teacher teacher);
+    @Override
+    Teacher fromDto(TeacherDto dto);
 
-    List<TeacherResponse> toResponseList(List<Teacher> teachers);
+    @Override
+    TeacherDto toDto(Teacher teacher);
 
-    Teacher fromCreateRequest(CreateTeacherRequest dto);
-
+    @Override
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    void updateTeacherFromRequest(UpdateTeacherRequest dto, @MappingTarget Teacher teacher);
+    void updateFromDto(TeacherDto dto, @MappingTarget Teacher teacher);
 }

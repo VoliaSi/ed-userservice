@@ -1,42 +1,48 @@
 package com.volia.example.userservice.service;
 
+import com.volia.example.userservice.exception.EmailAlreadyExistsException;
 import com.volia.example.userservice.exception.UserNotFoundException;
 import com.volia.example.userservice.model.User;
+import com.volia.example.userservice.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 @RequiredArgsConstructor
 public abstract class UserService<
         U extends User,
-        CreateDto,
-        UpdateDto,
-        ResponseDto,
+        Dto,
         M> {
 
-    protected final JpaRepository<U, Long> repository;
+    protected final UserRepository<U> repository;  // Generic UserRepository here
     protected final M mapper;
-    protected final PasswordEncoder passwordEncoder;
 
-    public ResponseDto create(CreateDto dto) {
-        U user = mapFromCreate(dto);
-        user.setPassword(passwordEncoder.encode(getPasswordFromCreateDto(dto)));
+    public Dto create(Dto dto) {
+        U user = mapFromDto(dto);
+
+        if (repository.existsByEmail(user.getEmail())) {
+            throw new EmailAlreadyExistsException(user.getEmail());
+        }
+
         U saved = repository.save(user);
-        return mapToResponse(saved);
+        return mapToDto(saved);
     }
 
-    public ResponseDto update(Long id, UpdateDto dto) {
+    public Dto update(Long id, Dto dto) {
         U user = repository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(id));
+
+        if (!user.getEmail().equals(dtoEmail(dto)) && repository.existsByEmail(dtoEmail(dto))) {
+            throw new EmailAlreadyExistsException(dtoEmail(dto));
+        }
+
         updateFromDto(dto, user);
         U saved = repository.save(user);
-        return mapToResponse(saved);
+        return mapToDto(saved);
     }
 
-    public ResponseDto getById(Long id) {
+    public Dto getById(Long id) {
         U user = repository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(id));
-        return mapToResponse(user);
+        return mapToDto(user);
     }
 
     public void delete(Long id) {
@@ -46,8 +52,10 @@ public abstract class UserService<
         repository.deleteById(id);
     }
 
-    protected abstract U mapFromCreate(CreateDto dto);
-    protected abstract String getPasswordFromCreateDto(CreateDto dto);
-    protected abstract void updateFromDto(UpdateDto dto, U user);
-    protected abstract ResponseDto mapToResponse(U user);
+    protected abstract U mapFromDto(Dto dto);
+    protected abstract void updateFromDto(Dto dto, U user);
+    protected abstract Dto mapToDto(U user);
+
+    // Abstract method to extract email from DTO
+    protected abstract String dtoEmail(Dto dto);
 }

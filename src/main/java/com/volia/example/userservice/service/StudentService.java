@@ -1,59 +1,37 @@
 package com.volia.example.userservice.service;
 
-import com.volia.example.userservice.dto.student.CreateStudentRequest;
-import com.volia.example.userservice.dto.student.StudentResponse;
-import com.volia.example.userservice.dto.student.UpdateStudentRequest;
-import com.volia.example.userservice.exception.UserNotFoundException;
+import com.volia.example.userservice.dto.StudentDto;
 import com.volia.example.userservice.mapper.StudentMapper;
 import com.volia.example.userservice.model.Student;
 import com.volia.example.userservice.repository.StudentRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
-public class StudentService extends UserService<
-        Student,
-        CreateStudentRequest,
-        UpdateStudentRequest,
-        StudentResponse,
-        StudentMapper> {
+public class StudentService extends UserService<Student, StudentDto, StudentMapper> {
 
-    private final StudentRepository repository;
-    private final StudentMapper mapper;
-    private final PasswordEncoder passwordEncoder;
-
-    public StudentService(StudentRepository repository,
-                          StudentMapper mapper,
-                          PasswordEncoder passwordEncoder) {
-        super(repository, mapper, passwordEncoder);
-        this.repository = repository;
-        this.mapper = mapper;
-        this.passwordEncoder = passwordEncoder;
+    public StudentService(StudentRepository repository, StudentMapper mapper) {
+        super(repository, mapper);
     }
 
     @Override
-    protected Student mapFromCreate(CreateStudentRequest dto) {
-        log.debug("Mapping CreateStudentRequest to Student entity");
-        return mapper.fromCreateRequest(dto);
+    protected Student mapFromDto(StudentDto dto) {
+        return mapper.fromDto(dto);
     }
 
     @Override
-    protected String getPasswordFromCreateDto(CreateStudentRequest dto) {
-        log.debug("Extracting password from CreateStudentRequest");
-        return dto.password();
+    protected void updateFromDto(StudentDto dto, Student user) {
+        mapper.updateFromDto(dto, user);
     }
 
     @Override
-    protected void updateFromDto(UpdateStudentRequest dto, Student user) {
-        log.debug("Updating Student entity from UpdateStudentRequest");
-        mapper.updateStudentFromRequest(dto, user);
+    protected StudentDto mapToDto(Student user) {
+        return mapper.toDto(user);
     }
 
     @Override
-    protected StudentResponse mapToResponse(Student user) {
-        log.debug("Mapping Student entity to StudentResponse");
-        return mapper.toResponse(user);
+    protected String dtoEmail(StudentDto dto) {
+        return dto.email();
     }
 }

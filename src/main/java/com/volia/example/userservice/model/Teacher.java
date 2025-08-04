@@ -2,18 +2,17 @@ package com.volia.example.userservice.model;
 
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 
 @Entity
 @DiscriminatorValue("TEACHER")
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 public class Teacher extends User {
     private String bio;
 }

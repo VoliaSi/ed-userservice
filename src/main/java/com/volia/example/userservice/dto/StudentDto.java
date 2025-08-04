@@ -1,12 +1,11 @@
-package com.volia.example.userservice.dto.student;
+package com.volia.example.userservice.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 
-public record CreateStudentRequest(
+public record StudentDto(
+        Long id,                       // can be null on create
         @NotBlank String name,
         @Email @NotBlank String email,
-        @Size(min = 8) String password,
         String university
 ) {}
