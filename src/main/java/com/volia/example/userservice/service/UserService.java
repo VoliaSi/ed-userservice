@@ -5,8 +5,12 @@ import com.volia.example.userservice.exception.UserNotFoundException;
 import com.volia.example.userservice.model.User;
 import com.volia.example.userservice.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+@Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public abstract class UserService<
         U extends User,
         Dto,
@@ -15,6 +19,7 @@ public abstract class UserService<
     protected final UserRepository<U> repository;  // Generic UserRepository here
     protected final M mapper;
 
+    @Transactional
     public Dto create(Dto dto) {
         U user = mapFromDto(dto);
 
@@ -26,6 +31,7 @@ public abstract class UserService<
         return mapToDto(saved);
     }
 
+    @Transactional
     public Dto update(Long id, Dto dto) {
         U user = repository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(id));
@@ -45,6 +51,13 @@ public abstract class UserService<
         return mapToDto(user);
     }
 
+    public java.util.List<Dto> getAll() {
+        return repository.findAll().stream()
+                .map(this::mapToDto)
+                .toList();
+    }
+
+    @Transactional
     public void delete(Long id) {
         if (!repository.existsById(id)) {
             throw new UserNotFoundException(id);
