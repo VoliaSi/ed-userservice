@@ -8,6 +8,6 @@ public record TeacherDto(
         @NotBlank String name,
         @Email @NotBlank String email,
         String bio
-) {}
+) implements UserDto {}
 
 

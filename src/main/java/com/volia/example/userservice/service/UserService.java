@@ -16,7 +16,7 @@ public abstract class UserService<
         Dto,
         M> {
 
-    protected final UserRepository<U> repository;  // Generic UserRepository here
+    protected final UserRepository<U> repository;
     protected final M mapper;
 
     @Transactional

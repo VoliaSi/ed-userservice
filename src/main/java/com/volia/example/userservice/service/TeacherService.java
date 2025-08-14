@@ -3,7 +3,9 @@ package com.volia.example.userservice.service;
 import com.volia.example.userservice.dto.TeacherDto;
 import com.volia.example.userservice.mapper.TeacherMapper;
 import com.volia.example.userservice.model.Teacher;
+import com.volia.example.userservice.model.User;
 import com.volia.example.userservice.repository.TeacherRepository;
+import com.volia.example.userservice.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
