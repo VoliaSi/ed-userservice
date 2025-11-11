@@ -164,15 +164,33 @@
             <plugin>
                 <groupId>org.codehaus.gmavenplus</groupId>
                 <artifactId>gmavenplus-plugin</artifactId>
-                <version>${gmavenplus.version}</version>
+                <version>3.0.2</version>
                 <executions>
                     <execution>
                         <goals>
-                            <goal>compile</goal>
+                            <goal>addTestSources</goal>
                             <goal>compileTests</goal>
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <sources>
+                        <fileset>
+                            <directory>src/main/groovy</directory>
+                            <includes>
+                                <include>**/*.groovy</include>
+                            </includes>
+                        </fileset>
+                    </sources>
+                    <testSources>
+                        <fileset>
+                            <directory>src/test/groovy</directory>
+                            <includes>
+                                <include>**/*.groovy</include>
+                            </includes>
+                        </fileset>
+                    </testSources>
+                </configuration>
             </plugin>
 
             <!-- Surefire Plugin -->

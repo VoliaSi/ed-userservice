@@ -1,4 +1,4 @@
-package com.volia.example.userservice.service
+package com.volia.example.userservice
 
 import com.volia.example.userservice.dto.TeacherDto
 import com.volia.example.userservice.exception.EmailAlreadyExistsException
@@ -6,6 +6,7 @@ import com.volia.example.userservice.exception.UserNotFoundException
 import com.volia.example.userservice.mapper.TeacherMapper
 import com.volia.example.userservice.model.Teacher
 import com.volia.example.userservice.repository.TeacherRepository
+import com.volia.example.userservice.service.TeacherService
 import spock.lang.Specification
 import spock.lang.Subject
 
@@ -40,13 +41,18 @@ class TeacherServiceSpec extends Specification {
         def result = service.create(dto)
 
         then:
+        1 * mapper.fromDto(dto) >> teacher
+        1 * repository.existsByEmail("john.doe@example.com") >> false
+        1 * repository.save(teacher) >> teacher
+        1 * mapper.toDto(teacher) >> dto
+        0 * _
+
         result.id() == null
         result.name() == "John Doe"
         result.email() == "john.doe@example.com"
         result.bio() == "Math teacher"
-        1 * repository.save(teacher)
-        0 * _
     }
+
 
     def "should throw EmailAlreadyExistsException when creating teacher with existing email"() {
         given:
@@ -171,6 +177,7 @@ class TeacherServiceSpec extends Specification {
         then:
         1 * repository.deleteById(1L)
     }
+
 
     def "should throw UserNotFoundException when deleting non-existing teacher"() {
         given:

@@ -1,5 +1,6 @@
 package com.volia.example.userservice.service;
 
+
 import com.volia.example.userservice.exception.EmailAlreadyExistsException;
 import com.volia.example.userservice.exception.UserNotFoundException;
 import com.volia.example.userservice.model.User;
